@@ -11,6 +11,6 @@ def sha256(fname):
 if len(sys.argv) == 2:
     fname = sys.argv[1]
     file = "output/" + fname
-    print(md5(file))
+    print(sha256(file))
 else:
     print("Usage: python sha256-file.py <filename>")

@@ -34,7 +34,7 @@ Calcula el sha-256 de un fichero de entrada y lo inprime.
 
 Uso: ```python sha256-file.py filename```
 
-Resumen MD5: 229a92d14af46007977b0d2c5918ce94
+Resumen MD5: c67b8491a524d1d9a8a7c8b30bfd39f0
 
 ## modify-file-sha256.py
 Crea un fichero modificado que contiene una línea adicional con 8 caracteres en hexadecimal y el identificador del grupo.
