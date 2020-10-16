@@ -17,13 +17,16 @@ def startswith(string):
 if len(sys.argv) == 2:
     fname = sys.argv[1]
 
-    modified = "modified-sha256.txt"
+    original = "input/" + fname
+    modified = "output/" + fname
     while 1:
-        copyfile(fname, modified)
+        copyfile(priginal, modified)
         hexadecimal30 = secrets.token_hex(15)
         hexadecimal8 = hexadecimal30[:8]
+        group = " G27"
         with open(modified, "a") as fm:
             fm.write("\n" + hexadecimal8)
+            fm.write(group)
         if startswith("0000"):
             break
 
