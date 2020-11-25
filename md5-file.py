@@ -10,7 +10,6 @@ def md5(fname):
 
 if len(sys.argv) == 2:
     fname = sys.argv[1]
-    file = "output/" + fname
-    print(md5(file))
+    print(md5(fname))
 else:
-    print("Usage: python md5-file.py <filename>")
+    print("Usage: python " + sys.argv[0] + " <filename>")
