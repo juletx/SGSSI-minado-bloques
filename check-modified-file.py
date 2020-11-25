@@ -2,43 +2,66 @@ import hashlib
 import sys
 import re
 
-fname = sys.argv[1]
+def starts_with(lines_fo, lines_fm):
+    # Comienza exactamente por los mismos contenidos que el primero
+    starts_with = lines_fo[:-1] == lines_fm[:-2] and lines_fo[-1] == lines_fm[-2]
+    print("Comienza exactamente por los mismos contenidos:", starts_with)
+    return starts_with
 
-original = "input/" + fname
-modified = "output/" + fname
+def includes_hex(lines_fm):
+    # Incluye una línea adicional con una secuencia de 8 caracteres en hexadecimal
+    string_hex = lines_fm[-1][:8]
+    hexchars = "0123456789abcdef"
+    all_hex = all(c in hexchars for c in string_hex)
+    print("Incluye una línea adicional con 8 caracteres en hexadecimal:", all_hex)
+    return all_hex
 
-fo = open(original, "r")
-lines_fo = fo.readlines()
-fm = open(modified, "r")
-lines_fm = fm.readlines()
+def includes_group(lines_fm):
+    # Incluye un identificador de grupo
+    string_group = lines_fm[-1][8:]
+    pattern = re.compile("^ G([0-3][0-9])+$")
+    match = bool(pattern.match(string_group))
+    print("Incluye un identificador de grupo:", match)
+    return match
 
-# Comienza exactamente por los mismos contenidos que el primero (sin \n)
-starts_with = lines_fo[:-1] == lines_fm[:-2] and lines_fo[-1] == lines_fm[-2]
-print("Comienza exactamente por los mismos contenidos:", starts_with)
+def md5_digest(text):
+    hash_md5_new = hashlib.md5()
+    hash_md5_new.update(text)
+    return hash_md5_new.hexdigest()
 
-# Incluye una línea adicional con una secuencia de 8 caracteres en hexadecimal
-string_hex = lines_fm[-1][:8]
-hexchars = "0123456789abcdef"
-all_hex = all(c in hexchars for c in string_hex)
-print("Incluye una línea adicional con 8 caracteres en hexadecimal:", all_hex)
+def starts_with0s(text_fm, ceros):
+    # El resumen MD5 del fichero debe comenzar 0s
+    digest = md5_digest(text_fm)
+    starts_with0s = digest.startswith("0"*(ceros))
+    print("El resumen MD5 del fichero comienza por " + str(ceros) + " ceros:", starts_with0s)
+    return starts_with0s
 
-# Incluye un identificador de grupo
-string_group = lines_fm[-1][8:]
-pattern = re.compile("^ G([0-3][0-9])+$")
-match = bool(pattern.match(string_group))
-print("Incluye un identificador de grupo:", match)
+def main():
+    if len(sys.argv) == 2:
+        fname = sys.argv[1]
 
-# El resumen MD5 del fichero debe comenzar por el carácter hexadecimal “0”
-def md5(fname):
-    hash_md5 = hashlib.md5()
-    with open(fname, "rb") as f:
-        for chunk in iter(lambda: f.read(4096), b""):
-            hash_md5.update(chunk)
-    return hash_md5.hexdigest()
+        original = "input/" + fname
+        modified = "output/" + fname
 
-digest = md5(modified)
-startswith0 = digest.startswith("0")
+        with open(original, "r") as fo:
+            lines_fo = fo.readlines()
+        with open(modified, "r") as fm:
+            lines_fm = fm.readlines()
+        with open(modified, "rb") as fm:
+            text_fm = fm.read()
 
-print("El resumen MD5 del fichero comienza por el carácter hexadecimal 0:", startswith0)
+        starts_w = starts_with(lines_fo, lines_fm)
 
-print("El archivo es correcto:", starts_with and all_hex and match and startswith0)
+        incl_hex = includes_hex(lines_fm)
+
+        incl_group = includes_group(lines_fm)
+
+        starts_w0s = starts_with0s(text_fm, 6)
+
+        print("El archivo es correcto:", starts_w and incl_hex and incl_group and starts_w0s)
+
+    else:
+        print("Use: python " + sys.argv[0] + " <filename>")
+
+if __name__ == "__main__":
+    main()
