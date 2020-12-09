@@ -72,14 +72,14 @@ def minado(process_number, number_of_processes, max_counter, results, ceros, fna
                            digest, count+1, str_time)
         count += number_of_processes  # Saltar al siguiente chunk.
 
-    if count < max_counter:
+    if count < max:
         print()
-        print("Success: Proof found before reaching maximum(" + str(max_counter) + ")")
+        print("Success: Proof found before reaching maximum(" + str(max) + ")")
         with open(modified, 'wb') as modified_file:
             modified_file.write(modified_text)
     else:
         print()
-        print("Fail: Proof not found before reaching maximum(" + str(max_counter) + ")")
+        print("Fail: Proof not found before reaching maximum(" + str(max) + ")")
 
 
 ##### MAIN ####
